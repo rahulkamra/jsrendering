@@ -1,26 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-		Remove this if you use the .htaccess -->
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-		<title>new_file</title>
-		<meta name="description" content="" />
-		<meta name="author" content="rahul.kumar" />
-		<meta name="viewport" content="width=device-width; initial-scale=1.0" />
-		<script src="engine/core/rendering2D/Camera.js"></script>
-		<script src="engine/core/rendering2D/Layers.js"></script>
-		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
-		<link rel="shortcut icon" href="/favicon.ico" />
-		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-	</head>
-	<body onload="onLoad()">
-		<script>
-			function onLoad(){
-				var x = new Layers;
-				x.
-			}
-		</script>
-	</body>
+    <head>
+        <meta charset="utf-8" />
+        <!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+        Remove this if you use the .htaccess -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <title>new_file</title>
+        <meta name="description" content="" />
+        <meta name="author" content="rahul.kumar" />
+        <meta name="viewport" content="width=device-width; initial-scale=1.0" />
+
+        <script src="engine/core/rendering2D/Point.js"></script>
+        <script src="URL.js"></script>
+        <script src="engine/core/rendering2D/Camera.js"></script>
+        <script src="engine/core/rendering2D/Layers.js"></script>
+        <script src="engine/core/rendering2D/Layer.js"></script>
+
+        <script src="engine/core/rendering2D/DisplayObject.js"></script>
+        <script src="engine/core/rendering2D/BlisImage.js"></script>
+        <script src="engine/core/iso/display/IsoPrimitive.js"></script>
+        <script src="engine/core/iso/display/IsoGrid.js"></script>
+
+
+        <script src="engine/core/iso/Pt.js"></script>
+        <script src="engine/core/iso/DefaultIsometricTransformation.js"></script>
+        <script src="engine/core/iso/IsoMath.js"></script>
+
+        <script src="ResourceLoader.js"></script>
+
+        <!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    </head>
+    <body >
+        <div  id="main" style="position: absolute;left: 300px;top: 100px;"></div>
+        <div  id="main2" style=""></div>
+        <script>
+                    
+                    
+                    
+            document.onmousemove = refreshMouseXY;
+            var mouseX = 0;
+            var mouseY = 0;
+
+            function refreshMouseXY(event) {
+                ev = event || window.event;
+                mouseX = ev.pageX;
+                mouseY = ev.pageY;
+            }
+            
+            
+            window.requestAnimFrame = (function() {
+                return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+                    function(/* function */callback, /* DOMElement */element) {
+                    window.setTimeout(callback, 1000 / 60);
+                };
+
+            })();
+            
+            init();
+            animate();
+            
+            var camera
+            function init() {
+                camera = new Camera(700, 700, 2800, 1964)
+                document.getElementById("main").appendChild(camera.mainCanvas);
+                camera.addLayer("bg");
+                camera.addLayer("grid");
+                addBG();
+            }
+            function animate() {
+                requestAnimFrame(animate);
+                tick();
+            }
+            function tick() {
+                if(this.camera){
+                    camera.onTick(1);
+                }
+            }
+            
+            
+            
+            /**
+             * 
+             * 
+             * 
+             *
+             */
+            
+            
+            function addBG(){
+                var res = new ResourceLoader();
+                var _this = this;
+                res.getImageData(new URL("bg.png"), function success(image){
+                    var blisImage = new BlisImage(image.width, image.height, image);
+                       console.log(blisImage);
+                    _this.camera.addObject(blisImage, "bg");
+                    addCameraPanning();
+                    //addGrid();
+                    //                    var canvas = document.createElement("canvas");
+                    //                    canvas.width = 1000;
+                    //                    canvas.height = 1000;
+                    //                    ctx = canvas.getContext('2d');
+                    //                    ctx.drawImage(image,0,0);
+                    //                    
+                    //                    document.getElementById("main").appendChild(canvas);
+                    //camera.mainCtx.drawImage(image,image.width,image.height)
+                });
+            }
+            
+            function addGrid(){
+                var grid = new IsoGrid([50,50],32);
+                this.camera.addObject(grid, "grid");
+            }
+            var _isDraggingMode = false;
+            var _prevX = 0;
+            var _prevY = 0;
+                
+            function addCameraPanning(){
+                var _this = this;
+                document.getElementById("main").onclick
+                document.getElementById("main").onmousedown =  function onMouseDown(){
+                    _this._isDraggingMode = true;
+                    _this._prevX  = _this.mouseX;
+                    _this._prevY  = _this.mouseY;
+                };
+                
+                document.getElementById("main").onmouseup=  function onMouseUp(){
+                    _this._isDraggingMode = false;
+                };
+                
+                document.getElementById("main").onmousemove = function onMouseMove(){
+                    if(!_this._isDraggingMode)return;
+                    camera.moveCamera(_this._prevX - _this.mouseX, _this._prevY - _this.mouseY);
+                    _this._prevX = _this.mouseX;
+                    _this._prevY = _this.mouseY;
+                };
+                
+                if(window.addEventListener)
+                    document.addEventListener('DOMMouseScroll', zoom, false);
+ 
+                //for IE/OPERA etc
+                document.onmousewheel = zoom;
+            }
+            
+            var zoomLevel = 1;
+            function zoom(event){
+                var delta = 0;
+                var tempZoom = 1;
+                if (!event) event = window.event;
+                if (event.wheelDelta) {
+ 
+                    // IE and Opera
+                    delta = event.wheelDelta / 60;
+ 
+                } else if (event.detail) {
+ 
+                    // W3C
+                    delta = -event.detail / 2;
+                }
+                if ( delta > 0 ) {
+                    zoomLevel += .2;
+                } else if ( delta < 0 ) {
+                    zoomLevel -= .2;
+                }
+                console.log(delta);
+                //camera._zoom
+                camera.setZoom(zoomLevel);
+            }
+        </script>
+    </body>
 </html>
