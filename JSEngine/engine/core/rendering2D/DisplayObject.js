@@ -15,10 +15,10 @@ function DisplayObject(id){
     this.mainCanvas = document.createElement("canvas");
     this.mainCanvas.width = this.width;
     this.mainCanvas.height = this.height;
-    this.mainCtx = this.mainCanvas.getContext('2d');
+    this.mainCtx = this.mainCanvas.getContext(Settings.RENDERING_TYPE);
     
     this.isPositionInvalidated = false;
-    this.isBitmapInvalidated = false;
+    this.isBitmapInvalidated = true;
     this.isSizeInvalidated = false;
     this.screenManager = '';
 
@@ -52,7 +52,7 @@ DisplayObject.prototype.setWidth = function(_width){
     this.isSizeInvalidated = true;
 };
 DisplayObject.prototype.getWidth = function(){
-    return _width;
+    return this._width;
 };
 
 DisplayObject.prototype.setHeight = function(_height){
@@ -61,7 +61,7 @@ DisplayObject.prototype.setHeight = function(_height){
 };
 
 DisplayObject.prototype.getHeight = function(){
-    return _height;
+    return this._height;
 };
 
 DisplayObject.prototype.invalidatePosition = function(){
@@ -71,8 +71,11 @@ DisplayObject.prototype.invalidatePosition = function(){
     this.isPositionInvalidated = false;
 };
 DisplayObject.prototype.invalidateSize = function(){
-    mainCanvas.width = this._width;
-    mainCanvas.height = this._height;
+    if(!this.mainCanvas){
+        console.log("CAnvas not defined");
+    }
+    this.mainCanvas.width = this._width;
+    this.mainCanvas.height = this._height;
     this.isSizeInvalidated = false;
 };
 DisplayObject.prototype.invalidateBitmap = function(){

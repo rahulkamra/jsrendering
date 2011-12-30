@@ -26,14 +26,13 @@ function Camera(cameraWidth , cameraHeight , boundsWidth,boundsHeight){
     this.backBufferCanvas = document.createElement("canvas");
     this.backBufferCanvas.width = this.cameraWidth;
     this.backBufferCanvas.height = this.cameraHeight;
-    this.backBufferCtx = this.backBufferCanvas.getContext('2d');
+    this.backBufferCtx = this.backBufferCanvas.getContext(Settings.RENDERING_TYPE);
     
     
     this.mainCanvas = document.createElement("canvas");
     this.mainCanvas.width = this.cameraWidth;
     this.mainCanvas.height = this.cameraHeight;
-    this.mainCtx = this.mainCanvas.getContext('2d');
-    
+    this.mainCtx = this.mainCanvas.getContext(Settings.RENDERING_TYPE);
     
     this._zoom = 1;
     this._previousZoom = 1;
@@ -50,7 +49,7 @@ Camera.prototype.addObject = function (object,layerId){
     if (this._objects[ object.colorId ] ) {
         console.log(this+ "addObject COLLISION AT " + object.colorId);
     }
-    object.setDestroyCallback(this.destroyObject );
+   // object.setDestroyCallback(this.destroyObject );
     this._objects[ object.colorId ] = object;
     this._layers.addObject( object, layerId );;
 };
@@ -178,7 +177,6 @@ Camera.prototype.updateZoom = function(){
     // this._mouseCanvas.scaleX = _mouseCanvas.scaleY = _zoom;
     this._zoomIsDirty = false;
     this._cameraSizeIsDirty = true;
-    console.log("Updating Zoom");
 };
     
 Camera.prototype.onTick = function (dt){
@@ -200,9 +198,9 @@ Camera.prototype.draw = function(){
     //_canvasData.fillRect( _canvasData.rect, 0 );
     //_mouseCanvasData.fillRect( _mouseCanvasData.rect, 0 );
     //console.log(this._cameraOffsetX)
-    this._layers.draw(this.backBufferCtx, this._mouseCanvasData, this._cameraOffsetX, this._cameraOffsetY );
-        
-    this.mainCtx.drawImage(this.backBufferCanvas, 0, 0)
+    
+    this._layers.draw(this.mainCtx, this._mouseCanvasData, this._cameraOffsetX, this._cameraOffsetY );
+    this.mainCtx.drawImage(this.backBufferCanvas, 0, 0);
 //_canvasData.unlock();
 //_mouseCanvasData.unlock();
 }
