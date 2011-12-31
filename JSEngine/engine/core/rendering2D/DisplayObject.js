@@ -1,4 +1,4 @@
-function DisplayObject(id){
+function DisplayObject(id,spatialManager){
     this.id = id;
     this._x = 0;
     this._y = 0;
@@ -19,8 +19,12 @@ function DisplayObject(id){
     
     this.isPositionInvalidated = false;
     this.isBitmapInvalidated = true;
-    this.isSizeInvalidated = false;
-    this.screenManager = '';
+    this.isSizeInvalidated = true;
+    
+    if(!spatialManager)
+       this.spatialManager = new DefaultSpatialManager();
+    else
+        this.spatialManager = spatialManager
 
 };
 
@@ -29,7 +33,27 @@ DisplayObject.prototype.update = function(){
 };
 
 DisplayObject.prototype.draw = function( canvas, mouseCanvas, cameraX, cameraY, mouseCullX, mouseCullY, mouseCullW, mouseCullH){
+    if(!canvas){
+        return;
+    }
+    if(this.isSizeInvalidated){
+        this.invalidateSize();
+    }
+    //bitmap is always invalidated after size , because image should be drawn when the size is set
+    if(this.isBitmapInvalidated){
+        this.invalidateBitmap();
+    }
+    if(this.isPositionInvalidated){
+        this.invalidatePosition();
+    }
+    
+    
+    this.onDraw(canvas, mouseCanvas, cameraX, cameraY, mouseCullX, mouseCullY, mouseCullW, mouseCullH);
 };
+
+DisplayObject.prototype.onDraw = function ( canvas, mouseCanvas, cameraX, cameraY, mouseCullX, mouseCullY, mouseCullW, mouseCullH){
+    
+}
 
 DisplayObject.prototype.toString = function(){
     return "[DisplayObject]";
@@ -65,7 +89,8 @@ DisplayObject.prototype.getHeight = function(){
 };
 
 DisplayObject.prototype.invalidatePosition = function(){
-    var screenPoint = screenManager.coordinateToScreen(new Point(this._x, this._y));
+    console.log(this.spatialManager);
+    var screenPoint = this.spatialManager.coordinateToScreen(new Point(this._x, this._y));
     this._screenX = screenPoint.x;
     this._screenY = screenPoint.y;
     this.isPositionInvalidated = false;

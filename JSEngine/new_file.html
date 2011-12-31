@@ -13,7 +13,13 @@
         <script src="engine/core/rendering2D/Point.js"></script>
         <script src="engine/core/rendering2D/Settings.js"></script>
         <script src="URL.js"></script>
+        
+        <script src="engine/core/events/EventDispatcher.js"></script>
+        <script src="engine/core/events/GameEvent.js"></script>
         <script src="engine/core/rendering2D/Camera.js"></script>
+        <script src="engine/core/rendering2D/manager/SpatialManager.js"></script>
+        <script src="engine/core/rendering2D/manager/DefaultSpatialManager.js"></script>
+        <script src="engine/core/Engine.js"></script>
         <script src="engine/core/rendering2D/Layers.js"></script>
         <script src="engine/core/rendering2D/Layer.js"></script>
 
@@ -38,64 +44,28 @@
         <div  id="main2" style=""></div>
         <script>
                     
-                    
-                    
-            document.onmousemove = refreshMouseXY;
-            var mouseX = 0;
-            var mouseY = 0;
-
-            function refreshMouseXY(event) {
-                ev = event || window.event;
-                mouseX = ev.pageX;
-                mouseY = ev.pageY;
-            }
-            
-            
-            window.requestAnimFrame = (function() {
-                return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
-                    function(/* function */callback, /* DOMElement */element) {
-                    window.setTimeout(callback, 1000 / 60);
-                };
-
-            })();
-            
             init();
-            animate();
+            var engine;
+            var camera;
             
-            var camera
             function init() {
-                camera = new Camera(700, 700, 2800, 1964)
+                var camera = new Camera(700, 700, 2800, 1964);
+                var spatialManager = new SpatialManager();
+                this.engine = new Engine(camera,spatialManager);
+                this.camera = camera;
+                
                 document.getElementById("main").appendChild(camera.mainCanvas);
-                camera.addLayer("bg");
-                camera.addLayer("grid");
+                engine.camera.addLayer("bg");
+                engine.camera.addLayer("grid");
                 addBG();
             }
-            function animate() {
-                requestAnimFrame(animate);
-                tick();
-            }
-            function tick() {
-                if(this.camera){
-                    camera.onTick(1);
-                }
-            }
-            
-            
-            
-            /**
-             * 
-             * 
-             * 
-             *
-             */
-            
             
             function addBG(){
                 var res = new ResourceLoader();
                 var _this = this;
                 res.getImageData(new URL("bg.png"), function success(image){
                     var blisImage = new BlisImage(image.width, image.height, image);
-                       console.log(blisImage);
+                    console.log(blisImage);
                     _this.camera.addObject(blisImage, "bg");
                     addCameraPanning();
                     //addGrid();
@@ -123,8 +93,8 @@
                 document.getElementById("main").onclick
                 document.getElementById("main").onmousedown =  function onMouseDown(){
                     _this._isDraggingMode = true;
-                    _this._prevX  = _this.mouseX;
-                    _this._prevY  = _this.mouseY;
+                    _this._prevX  = engine.mouseX;
+                    _this._prevY  = engine.mouseY;
                 };
                 
                 document.getElementById("main").onmouseup=  function onMouseUp(){
@@ -133,9 +103,9 @@
                 
                 document.getElementById("main").onmousemove = function onMouseMove(){
                     if(!_this._isDraggingMode)return;
-                    camera.moveCamera(_this._prevX - _this.mouseX, _this._prevY - _this.mouseY);
-                    _this._prevX = _this.mouseX;
-                    _this._prevY = _this.mouseY;
+                    camera.moveCamera(_this._prevX - engine.mouseX, _this._prevY - engine.mouseY);
+                    _this._prevX = engine.mouseX;
+                    _this._prevY = engine.mouseY;
                 };
                 
                 if(window.addEventListener)
@@ -165,7 +135,6 @@
                 } else if ( delta < 0 ) {
                     zoomLevel -= .2;
                 }
-                console.log(delta);
                 //camera._zoom
                 camera.setZoom(zoomLevel);
             }

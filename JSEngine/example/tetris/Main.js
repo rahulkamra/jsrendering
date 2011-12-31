@@ -4,9 +4,15 @@
  */
 
 function Main(){
-    var camera = new Camera(700, 600, 700, 600);
-    camera.addLayer("objects");
-    //camera.
+    Engine.width = 700;
+    Engine.height = 700;
+    var camera = new Camera(Engine.width, Engine.height, Engine.width, Engine.height)
+    this.engine = new Engine(camera);
+    this.camera = this.engine.camera;
+    this.camera.addLayer("objects");
 }
+
+
+
 
 

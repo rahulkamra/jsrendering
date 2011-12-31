@@ -14,17 +14,7 @@ function BlisImage(width,height,image){
 BlisImage.prototype = new DisplayObject();
 
 
-BlisImage.prototype.draw = function(canvas, mouseCanvas, cameraX, cameraY, mouseCullX, mouseCullY, mouseCullW, mouseCullH){
-    if(!canvas){
-        return;
-    }
-    if(this.isSizeInvalidated){
-        this.invalidateSize();
-    }
-    //bitmap is always invalidated after size , because image should be drawn when the size is set
-    if(this.isBitmapInvalidated){
-        this.invalidateBitmap();
-    }
+BlisImage.prototype.onDraw = function(canvas, mouseCanvas, cameraX, cameraY, mouseCullX, mouseCullY, mouseCullW, mouseCullH){
     this.mainCanvas.id = "Image";
     //console.log(cameraX - this.getWidth()*0.5,cameraY - this.getHeight()*0.5);
     //canvas.drawImage(this.mainCanvas,0,0);

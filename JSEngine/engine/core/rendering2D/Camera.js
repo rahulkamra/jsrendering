@@ -173,8 +173,6 @@ Camera.prototype.updateZoom = function(){
         this._zoom = .01;
     }
     this.backBufferCtx.scale(this._zoom/this._previousZoom, this._zoom/this._previousZoom)
-    //   this._canvas.scaleX = _canvas.scaleY = _zoom;
-    // this._mouseCanvas.scaleX = _mouseCanvas.scaleY = _zoom;
     this._zoomIsDirty = false;
     this._cameraSizeIsDirty = true;
 };
@@ -191,15 +189,13 @@ Camera.prototype.draw = function(){
     if ( this._cameraSizeIsDirty ) {
         this.updateCameraSize();
     }
-        
     // this.backBufferCtx.clearRect ( 0 , 0 , this._viewPortWidth , this._viewPortHeight);
     //_canvasData.lock();
     //_mouseCanvasData.lock();
     //_canvasData.fillRect( _canvasData.rect, 0 );
     //_mouseCanvasData.fillRect( _mouseCanvasData.rect, 0 );
     //console.log(this._cameraOffsetX)
-    
-    this._layers.draw(this.mainCtx, this._mouseCanvasData, this._cameraOffsetX, this._cameraOffsetY );
+    this._layers.draw(this.backBufferCtx, this._mouseCanvasData, this._cameraOffsetX, this._cameraOffsetY );
     this.mainCtx.drawImage(this.backBufferCanvas, 0, 0);
 //_canvasData.unlock();
 //_mouseCanvasData.unlock();
