@@ -4,5 +4,5 @@
  */
 
 var Settings = {
-    RENDERING_TYPE : "webgl-2d"
+    RENDERING_TYPE : "2d"
 };
