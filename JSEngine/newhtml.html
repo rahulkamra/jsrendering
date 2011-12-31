@@ -1,36 +1,38 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
 <html>
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="jQuery.js"></script>
     </head>
-    <body onload="testList();">
+    <body>
         <script>
-            function buildList(list) {
-                var result = [];
-                for (var i = 0; i < list.length; i++) {
-                    var item = 'item' + list[i];
-                    var j=0;
-                    result.push( function() {
-                        j++;
-                        alert(item + ' ' + j + list[i])
-                    } );
-                }
-                return result;
+            /**
+             * @class A
+             */
+            function A(a) {
+                this.a = a
             }
 
-            function testList() {
-                var fnlist = buildList([1,2,3]);
-                alert(fnlist);
-                // using j only to help prevent confusion - could use i
-                for (var j = 0; j < fnlist.length; j++) {
-                    fnlist[j]();
-                }
+            A.prototype.f = function() {
+                return 'A'+this.a+'A'
             }
+
+            /**
+             * @class B
+             */
+            B.prototype = jQuery.extend(true, {}, A.prototype)
+            function B(a, b) {
+                A.apply(this, [a])
+                this.b = b
+            }
+
+            B.prototype.f = function() {
+                return A.prototype.f.apply(this)+'B'+this.b+'B'
+            }
+
+            var a = new A(1)
+            var b = new B(2, 3)
         </script>
     </body>
 </html>

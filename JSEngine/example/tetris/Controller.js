@@ -20,13 +20,13 @@ Controller.prototype.initScreenArray = function (){
             } 
             Controller.gridArray[count][innercount] = 0
         }
-    }
+    } 
 };
 
 Controller.prototype.spawnANewPiece = function (){
     var spatial = new TetrisSpatialManager();
-    var minus = new Minus("",spatial);
-    minus.setPosition(new Point(10,10));
-    Controller.camera.addObject(minus,"objects");
+   // var minus = new Minus("",spatial);
+    //minus.setPosition(new Point(50,50));
+    //Controller.camera.addObject(minus,"objects");
    
 };

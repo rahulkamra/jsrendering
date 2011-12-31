@@ -4,17 +4,15 @@
  */
 
 
-function Minus(type){
-    this.type = type;
+function Minus(id,spatialManager){
+    this.id = id;
+    this.spatialManager = spatialManager
 }
 
-Minus.prototype = new Entity();
+Minus.prototype = new Entity(this.id,this.spatialManager);
 
 Minus.prototype.onDraw = function( canvas, mouseCanvas, cameraX, cameraY, mouseCullX, mouseCullY, mouseCullW, mouseCullH){
-     if(this.isBitmapInvalidated){
-        this.invalidateBitmap();
-    }
-    canvas.drawImage(this.mainCanvas,cameraX - this.getWidth()*0.5,cameraY - this.getHeight()*0.5);
+    canvas.drawImage(this.mainCanvas,this._screenX,this._screenY);
 };
 
 Minus.prototype.invalidateBitmap = function(){

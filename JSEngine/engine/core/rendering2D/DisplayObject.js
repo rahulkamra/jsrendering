@@ -11,7 +11,7 @@ function DisplayObject(id,spatialManager){
     this.alpha = 0;
     this.isAnimated = false;
     this.isOver = false;
-
+    console.log("Here" , spatialManager , "DO");
     this.mainCanvas = document.createElement("canvas");
     this.mainCanvas.width = this.width;
     this.mainCanvas.height = this.height;
@@ -27,6 +27,7 @@ function DisplayObject(id,spatialManager){
         this.spatialManager = spatialManager
 
 };
+
 
 DisplayObject.prototype.update = function(){
 
@@ -89,10 +90,11 @@ DisplayObject.prototype.getHeight = function(){
 };
 
 DisplayObject.prototype.invalidatePosition = function(){
-    console.log(this.spatialManager);
+    console.log(this._x);
     var screenPoint = this.spatialManager.coordinateToScreen(new Point(this._x, this._y));
     this._screenX = screenPoint.x;
     this._screenY = screenPoint.y;
+    console.log(this.spatialManager);
     this.isPositionInvalidated = false;
 };
 DisplayObject.prototype.invalidateSize = function(){
