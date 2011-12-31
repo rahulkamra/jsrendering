@@ -16,8 +16,7 @@ BlisImage.prototype = new DisplayObject();
 
 BlisImage.prototype.onDraw = function(canvas, mouseCanvas, cameraX, cameraY, mouseCullX, mouseCullY, mouseCullW, mouseCullH){
     this.mainCanvas.id = "Image";
-    //console.log(cameraX - this.getWidth()*0.5,cameraY - this.getHeight()*0.5);
-    //canvas.drawImage(this.mainCanvas,0,0);
+   // DisplayObject.prototype.onDraw (canvas, mouseCanvas, cameraX, cameraY, mouseCullX, mouseCullY, mouseCullW, mouseCullH);
     canvas.drawImage(this.mainCanvas,cameraX - this.getWidth()*0.5,cameraY - this.getHeight()*0.5);
 };
 

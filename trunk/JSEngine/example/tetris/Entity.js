@@ -3,12 +3,12 @@
  * and open the template in the editor.
  */
 
-function Entity(type){
-    this.type = type;
+function Entity(id,spatialManager){
     this.isFixed = true;
     this.fillColor = "red";
+    console.log(spatialManager,"Entity");
+    DisplayObject.apply(this, [id,spatialManager]);
 }
-
 Entity.prototype = new DisplayObject();
 
 
